@@ -42,7 +42,7 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
-
+This project trains a text classifier named TakeMeter to sort posts from **r/gaming**, an active public community of 2.7M members discussing game design, industry news, hardware, and community culture. Online gaming forums contain a mix of factual reporting, mechanical critique, and conversational inquiries that can be noisy to parse. TakeMeter categorizes incoming posts into four distinct functional buckets (`news_industry`, `critique_opinion`, `community_inquiry`, and `setup_nostalgia`) so readers can filter news and in-depth design discussions from general advice requests and setup threads.
 
 ---
 
@@ -54,33 +54,50 @@
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+### `news_industry`
 
-**Definition:**
-
-**Example 1:**
->
-
-**Example 2:**
->
-
-### `label_two`
-
-**Definition:**
+**Definition:** Reports factual developments, company financial actions, studio announcements, engine migrations, or release dates backed by external sources or quotes.
 
 **Example 1:**
->
+>"We're using AI": Xbox business strategist claims he could be fired "because I told you the truth that nobody wants you to know"
 
 **Example 2:**
->
+> "PlayStation founder Ken Kutaragi says discs became "metaphor for 'owning' games", and that upset at their discontinuation is a "mentality issue"
+
+### `critique_opinion`
+
+**Definition:** Makes an evaluative argument about game mechanics, progression pacing, difficulty, or design systems based on playtime experience.
+
+**Example 1:**
+> "I do not recommend Silent Hill: Townfall. I really gave the game a chance and for the most part it was cool, but there are just too many amazing games to play and it’s just not worth it unless on discount."
+
+**Example 2:**
+> "Witcher 3 is exactly as good as I remember it being from 10 years ago."
+
+### `community_inquiry`
+
+**Definition:** Solicits game recommendations, purchase advice, genre suggestions, or help identifying unknown games and mechanics from community members.
+**Example 1:**
+> "What unassuming game has surprisingly deep lore?"
+
+**Example 2:**
+> "I want to get my wife into gaming but I don’t know how"
+
+### `setup_nostalgia`
+
+**Definition:** Shares personal battlestations, physical hardware collections, retro shop discoveries, or vintage memories to foster shared community bonding.
+
+**Example 1:**
+> "Finally upgraded my steam machine… to a steam machine!"
+**Example 2:**
+> "I found it on my parents house after playing it on release date around 2002. Pure joy 🥹
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** `critique_opinion` vs. `community_inquiry`
 
 **The decision rule I used every time:**
-<!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
-     if the tone is heated." -->
+"If the primary intent of the post is to solicit answers, buying advice, or suggestions from the community (signaled by direct questions such as 'Which should I get?', 'Is it worth it?', or 'What games are like this?'), label it `community_inquiry`, even if the body contains extensive critique or scoring of games the poster already played."
 
 
 
@@ -91,45 +108,48 @@
 <!-- Where you collected from, how you labelled, your counts, and three hard
      cases. -->
 
+
+
 **Where the posts came from:**
+Verbatim submissions and discussions gathered directly from the public subreddit `r/gaming` during October 2026.
 
 **How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
-Say so plainly — the disclosure is required, not penalised. -->
+I labeled the first 20 posts cold by hand with zero AI assistance (marked with `cold` in the `note` column). For the remaining 180 posts, I used an LLM to generate initial candidate labels based on my taxonomy, and then manually inspected and corrected every single row against my decision rule before committing.
 
 **Counts per label:**
 
 | Label | Count | Share |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
-| **Total** |  | 100% |
-
+| `news_industry` | 50 | 25.0% |
+| `critique_opinion` | 50 | 25.0% |
+| `community_inquiry` | 50 | 25.0% |
+| `setup_nostalgia` | 50 | 25.0% |
+| **Total** | 200 | 100% |
 **Three hard cases**
 
 <!-- Any post that made you pause: what it was, which two labels it could have
      been, and what you chose. These are worth more than the easy 190. -->
 
 **1.**
-> *The post:*
+> *The post:* "Thinking about Ape Escape… I’m going through my storage and looking at my old games. I spot all the Ape Escapes. Those games rocked. Will there ever be a new Ape Escape? I was so addicted to those games - just loved the weird story and getting new gadgets to find different monkeys on later playthroughs. Alternatively, are there any games to scratch this itch?"
 >
-> *Could have been:*
+> *Could have been:* `setup_nostalgia` vs. `community_inquiry`
 >
-> *I chose, because:*
+> *I chose, because:* I chose `community_inquiry`. Although the author opens with retro nostalgia from cleaning out their storage, the actionable conclusion of the post asks the community for alternative games to scratch the itch.
 
 **2.**
-> *The post:*
+> *The post:* "Hot Take: I liked Hellraiser: Revival more than Silent Hill: Townfall and Resident Evil 9. My Horror Game of the Year without a doubt"
 >
-> *Could have been:*
+> *Could have been:* `critique_opinion` vs. `community_inquiry`
 >
-> *I chose, because:*
+> *I chose, because:* I chose `critique_opinion`. The author is declaring an evaluative stance and GOTY ranking based on gameplay preference without asking the community for opinions or recommendations.
 
 **3.**
-> *The post:*
+> *The post:* "PlayStation founder Ken Kutaragi says discs became 'metaphor for owning games', and that upset at their discontinuation is a 'mentality issue'"
 >
-> *Could have been:*
+> *Could have been:* `news_industry` vs. `critique_opinion`
 >
-> *I chose, because:*
+> *I chose, because:* I chose `news_industry`. Even though the quote expresses a provocative personal opinion about physical media, the poster is neutrally reporting an interview quote from an industry executive.
 
 ---
 
@@ -137,15 +157,23 @@ Say so plainly — the disclosure is required, not penalised. -->
 
 <!-- Your starting model, your settings, and anything you changed and why. -->
 
-**Base model:**
+**Base model:** `distilbert-base-uncased`
 
 **Settings:** <!-- epochs, learning rate, batch size, seed -->
+- Epochs: 3
+- Learning Rate: 2e-5
+- Batch Size: 16
+- Max Sequence Length: 128
+- Seed: 42
+- Hardware Device: `mps` (Apple Silicon GPU)
 
-**Anything I changed from the defaults, and why:**
+**Anything I changed from the defaults, and why:** None; kept default hyperparameters (3 epochs, lr=2e-5, batch=16, seq_len=128) to establish a clean baseline run for Unit 5 before hyperparameter tuning in Unit 6.
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
-split. If a label had fewer than about 8 in test, say so — it explains a lot
-of next unit's variance. -->
+- Train: 140 (70%)
+- Val: 30 (15%)
+- Test: 30 (15%)
+- Per-label counts in test split: `news_industry`: ~7–8, `critique_opinion`: ~7–8, `community_inquiry`: ~7–8, `setup_nostalgia`: ~7–8. With 30 test items across 4 balanced labels, each class has approximately 7 to 8 examples in the test split.
 
 
 
@@ -161,19 +189,17 @@ of next unit's variance. -->
      problem. -->
 
 **Moment 1**
-
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* Assistance in establishing a decision rule between posts that contain both extensive game critique/reviews and a community question.
+- *What came back:* A suggestion to check post length and classify anything over two paragraphs as `critique_opinion`.
+- *What I changed:* Rejected the word-count rule because long Reddit posts often write extensive backstories before asking for game recommendations. Instead, I established an intent-based decision rule focusing on actionable interrogatives ('Is that worth it?', 'Which should I get?').
 
 **Moment 2**
-
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* How to classify developer and executive interview quotes that express strong personal opinions on gaming trends.
+- *What came back:* An initial suggestion to label them `critique_opinion` due to the subjective language used in the quote.
+- *What I changed:* Overrode this advice and classified developer/executive quotes as `news_industry` because the poster's action is reporting industry news rather than sharing player analysis.
 
 **Pre-labelling disclosure:**
-
+The first 20 examples were labeled completely cold by hand with zero AI assistance (marked with `cold` in the `note` column). For the remaining 180 examples, an LLM was used to generate initial candidate labels based on my 4-label taxonomy, and I manually reviewed, validated, and corrected every single row against my decision rule before saving to `labels.csv`.
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 5.
