@@ -129,10 +129,9 @@ The first 20 rows were labeled cold by hand without tool assistance. The remaini
 **3.**
 > *The post:* "A new report, which interviewed 101 leaders from studios across North America and Europe, found that 94% said their studios use AI at some stage in development..."
 >
-> *Could have been:* `news_industry` vs. `critique_opinion`
+> *Could have been:* `critique_opinion` or `news_industry`
 >
-> *I chose, because:* I chose `news_industry`. Even though the quote expresses a provocative personal opinion about physical media, the poster is neutrally reporting an interview quote from an industry executive.
-
+> *I chose, because:* `news_industry`. It cites structured survey findings and quotes industry executives rather than offering personal commentary.
 ---
 
 ## The Training Run
@@ -149,14 +148,13 @@ The first 20 rows were labeled cold by hand without tool assistance. The remaini
 - Seed: 42
 - Hardware Device: `mps` (Apple Silicon GPU)
 
-**Anything I changed from the defaults, and why:** None; kept default hyperparameters (3 epochs, lr=2e-5, batch=16, seq_len=128) to establish a clean baseline run for Unit 5 before hyperparameter tuning in Unit 6.
+**Anything I changed from the defaults, and why:** Maintained defaults to establish the required baseline for the 4-label taxonomy.
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
 **Split sizes:**
 - Train: 139 (news_industry: 52, critique_opinion: 24, community_inquiry: 38, setup_nostalgia: 25)
 - Val: 31 (news_industry: 12, critique_opinion: 5, community_inquiry: 9, setup_nostalgia: 5)
 - Test: 30 (news_industry: 11, critique_opinion: 5, community_inquiry: 8, setup_nostalgia: 6)
-- Per-label counts in test split: `news_industry`: ~7–8, `critique_opinion`: ~7–8, `community_inquiry`: ~7–8, `setup_nostalgia`: ~7–8. With 30 test items across 4 balanced labels, each class has approximately 7 to 8 examples in the test split.
 
 
 
@@ -172,17 +170,16 @@ The first 20 rows were labeled cold by hand without tool assistance. The remaini
      problem. -->
 
 **Moment 1**
-- *What I asked for:* Assistance in establishing a decision rule between posts that contain both extensive game critique/reviews and a community question.
-- *What came back:* A suggestion to check post length and classify anything over two paragraphs as `critique_opinion`.
-- *What I changed:* Rejected the word-count rule because long Reddit posts often write extensive backstories before asking for game recommendations. Instead, I established an intent-based decision rule focusing on actionable interrogatives ('Is that worth it?', 'Which should I get?').
+- *What I asked for:* Suggested taxonomy boundary rules to distinguish review posts ending in questions from standalone opinion takes.
+- *What came back:* A proposed rule prioritizing interrogative syntax over review body text.
+- *What I changed:* Narrowed the definition so rhetorical questions within essays remain `critique_opinion`, reserving `community_inquiry` for genuine calls for answers or recommendations.
 
 **Moment 2**
-- *What I asked for:* How to classify developer and executive interview quotes that express strong personal opinions on gaming trends.
-- *What came back:* An initial suggestion to label them `critique_opinion` due to the subjective language used in the quote.
-- *What I changed:* Overrode this advice and classified developer/executive quotes as `news_industry` because the poster's action is reporting industry news rather than sharing player analysis.
+- *What I asked for:* Formatting and pre-labeling scraped post titles into CSV format matching the project schema.
+- *What came back:* Structured CSV rows categorized into the 4 target labels.
+- *What I changed:* Manually adjusted several borderline retro review posts that had been misassigned to `setup_nostalgia` instead of `critique_opinion`.
 
-**Pre-labelling disclosure:**
-The first 20 examples were labeled completely cold by hand with zero AI assistance (marked with `cold` in the `note` column). For the remaining 180 examples, an LLM was used to generate initial candidate labels based on my 4-label taxonomy, and I manually reviewed, validated, and corrected every single row against my decision rule before saving to `labels.csv`.
+**Pre-labelling disclosure** Rows 21 through 200 in `labels.csv` were pre-labeled with an LLM in batches against the project taxonomy and individually reviewed and verified before training.
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 5.
