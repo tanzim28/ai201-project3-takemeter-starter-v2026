@@ -42,7 +42,7 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
-This project trains a text classifier named TakeMeter to sort posts from **r/gaming**, an active public community of 2.7M members discussing game design, industry news, hardware, and community culture. Online gaming forums contain a mix of factual reporting, mechanical critique, and conversational inquiries that can be noisy to parse. TakeMeter categorizes incoming posts into four distinct functional buckets (`news_industry`, `critique_opinion`, `community_inquiry`, and `setup_nostalgia`) so readers can filter news and in-depth design discussions from general advice requests and setup threads.
+TakeMeter is a text classifier built to categorize posts from the [r/gaming](https://www.reddit.com/r/gaming/) community into four operational categories: `news_industry`, `critique_opinion`, `community_inquiry`, and `setup_nostalgia`. It distinguishes factual reporting and corporate developments from player evaluations, troubleshooting/recommendation inquiries, and hardware/nostalgia retrospectives.
 
 ---
 
@@ -55,50 +55,31 @@ This project trains a text classifier named TakeMeter to sort posts from **r/gam
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
 ### `news_industry`
-
-**Definition:** Reports factual developments, company financial actions, studio announcements, engine migrations, or release dates backed by external sources or quotes.
-
-**Example 1:**
->"We're using AI": Xbox business strategist claims he could be fired "because I told you the truth that nobody wants you to know"
-
-**Example 2:**
-> "PlayStation founder Ken Kutaragi says discs became "metaphor for 'owning' games", and that upset at their discontinuation is a "mentality issue"
+*Definition:* Posts reporting factual studio announcements, release dates, executive remarks, acquisitions, trailer drops, or industry financial/legal news.
+*Example 1:* "PlayStation founder Ken Kutaragi says discs became 'metaphor for owning games', and that upset at their discontinuation is a 'mentality issue'"
+*Example 2:* "Blizzard warns World of Warcraft: Forever players it will 'very aggressively' punish anyone who buys gold with real money"
 
 ### `critique_opinion`
-
-**Definition:** Makes an evaluative argument about game mechanics, progression pacing, difficulty, or design systems based on playtime experience.
-
-**Example 1:**
-> "I do not recommend Silent Hill: Townfall. I really gave the game a chance and for the most part it was cool, but there are just too many amazing games to play and it’s just not worth it unless on discount."
-
-**Example 2:**
-> "Witcher 3 is exactly as good as I remember it being from 10 years ago."
+*Definition:* Posts offering subjective evaluations, reviews, design praise, or critiques of gameplay mechanics, pacing, or narrative choices.
+*Example 1:* "Hot Take: I liked Hellraiser: Revival more than Silent Hill: Townfall and Resident Evil 9. My Horror Game of the Year without a doubt"
+*Example 2:* "Why do developers insist on adding unskippable slow-walking dialogue sections? It ruins replayability when you just want to get back into the actual gameplay loops."
 
 ### `community_inquiry`
-
-**Definition:** Solicits game recommendations, purchase advice, genre suggestions, or help identifying unknown games and mechanics from community members.
-**Example 1:**
-> "What unassuming game has surprisingly deep lore?"
-
-**Example 2:**
-> "I want to get my wife into gaming but I don’t know how"
+*Definition:* Posts asking for game recommendations, technical identification, gameplay assistance, or solicitations of player experiences.
+*Example 1:* "What is the terminology for when you can fire a shot as rapidly as you can press the button?"
+*Example 2:* "Please help me identify this game: I remember watching a trailer of an open world fantasy game within the last year-ish, and you played as a cat-person, you could do magic, and you were part of a clan."
 
 ### `setup_nostalgia`
-
-**Definition:** Shares personal battlestations, physical hardware collections, retro shop discoveries, or vintage memories to foster shared community bonding.
-
-**Example 1:**
-> "Finally upgraded my steam machine… to a steam machine!"
-**Example 2:**
-> "I found it on my parents house after playing it on release date around 2002. Pure joy 🥹
+*Definition:* Posts showcasing physical hardware, retro collections, vintage media, battlestations, or reflective retrospectives on classic hardware.
+*Example 1:* "Antique shop find today. Local shop is selling a GBA Special edition in box. They're asking $189 and it's been sitting for over a year."
+*Example 2:* "Found my old binder of Nintendo Power magazines from 1996 through 2001 while helping clean out my childhood attic"
 
 ### The hardest boundary
 
 **Which two labels:** `critique_opinion` vs. `community_inquiry`
 
 **The decision rule I used every time:**
-"If the primary intent of the post is to solicit answers, buying advice, or suggestions from the community (signaled by direct questions such as 'Which should I get?', 'Is it worth it?', or 'What games are like this?'), label it `community_inquiry`, even if the body contains extensive critique or scoring of games the poster already played."
-
+If a post contains a personal evaluation or review but concludes by prompting the community with an open-ended question or request for advice/recommendations (e.g., "What did you think?" or "Has anyone else felt this?"), label it `community_inquiry`. Label as `critique_opinion` only when the primary intent is delivering an evaluation or take.
 
 
 ---
@@ -111,41 +92,42 @@ This project trains a text classifier named TakeMeter to sort posts from **r/gam
 
 
 **Where the posts came from:**
-Verbatim submissions and discussions gathered directly from the public subreddit `r/gaming` during October 2026.
+200 public organic user submissions gathered directly from [r/gaming](https://www.reddit.com/r/gaming/).
 
 **How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
-I labeled the first 20 posts cold by hand with zero AI assistance (marked with `cold` in the `note` column). For the remaining 180 posts, I used an LLM to generate initial candidate labels based on my taxonomy, and then manually inspected and corrected every single row against my decision rule before committing.
+The first 20 rows were labeled cold by hand without tool assistance. The remaining 180 rows were pre-labeled in batches against the written taxonomy definitions and individually checked and corrected.
 
 **Counts per label:**
 
 | Label | Count | Share |
 |---|---|---|
-| `news_industry` | 50 | 25.0% |
-| `critique_opinion` | 50 | 25.0% |
-| `community_inquiry` | 50 | 25.0% |
-| `setup_nostalgia` | 50 | 25.0% |
-| **Total** | 200 | 100% |
+| `news_industry` | 75 | 37.5% |
+| `community_inquiry` | 55 | 27.5% |
+| `setup_nostalgia` | 36 | 18.0% |
+| `critique_opinion` | 34 | 17.0% |
+| **Total** | **200** | **100%** |
+
 **Three hard cases**
 
 <!-- Any post that made you pause: what it was, which two labels it could have
      been, and what you chose. These are worth more than the easy 190. -->
 
 **1.**
-> *The post:* "Thinking about Ape Escape… I’m going through my storage and looking at my old games. I spot all the Ape Escapes. Those games rocked. Will there ever be a new Ape Escape? I was so addicted to those games - just loved the weird story and getting new gadgets to find different monkeys on later playthroughs. Alternatively, are there any games to scratch this itch?"
+>*The post:* "Late to the party, but just beat RE Village... Capcom has been on fire the last few years, and Village holds to that standard. Visuals are gorgeous, areas are varied. What did you folks think about it?"
 >
-> *Could have been:* `setup_nostalgia` vs. `community_inquiry`
+>*Could have been:* `critique_opinion` or `community_inquiry`
 >
-> *I chose, because:* I chose `community_inquiry`. Although the author opens with retro nostalgia from cleaning out their storage, the actionable conclusion of the post asks the community for alternative games to scratch the itch.
+>*I chose, because:* `community_inquiry`. Under the boundary rule, the prompt ends with a direct question asking the community for their opinions, making engagement the primary intent.
 
 **2.**
-> *The post:* "Hot Take: I liked Hellraiser: Revival more than Silent Hill: Townfall and Resident Evil 9. My Horror Game of the Year without a doubt"
+> *The post:* "Halo 2 (2004) Elite. Looking back at character model fidelity 20+ years ago."
 >
-> *Could have been:* `critique_opinion` vs. `community_inquiry`
+> *Could have been:* `critique_opinion` or `setup_nostalgia`
 >
-> *I chose, because:* I chose `critique_opinion`. The author is declaring an evaluative stance and GOTY ranking based on gameplay preference without asking the community for opinions or recommendations.
+> *I chose, because:* `setup_nostalgia`. The post reflects retro appreciation of legacy 2004 tech rather than offering an argumentative critique of gameplay mechanics.
 
 **3.**
-> *The post:* "PlayStation founder Ken Kutaragi says discs became 'metaphor for owning games', and that upset at their discontinuation is a 'mentality issue'"
+> *The post:* "A new report, which interviewed 101 leaders from studios across North America and Europe, found that 94% said their studios use AI at some stage in development..."
 >
 > *Could have been:* `news_industry` vs. `critique_opinion`
 >
@@ -170,9 +152,10 @@ I labeled the first 20 posts cold by hand with zero AI assistance (marked with `
 **Anything I changed from the defaults, and why:** None; kept default hyperparameters (3 epochs, lr=2e-5, batch=16, seq_len=128) to establish a clean baseline run for Unit 5 before hyperparameter tuning in Unit 6.
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
-- Train: 140 (70%)
-- Val: 30 (15%)
-- Test: 30 (15%)
+**Split sizes:**
+- Train: 139 (news_industry: 52, critique_opinion: 24, community_inquiry: 38, setup_nostalgia: 25)
+- Val: 31 (news_industry: 12, critique_opinion: 5, community_inquiry: 9, setup_nostalgia: 5)
+- Test: 30 (news_industry: 11, critique_opinion: 5, community_inquiry: 8, setup_nostalgia: 6)
 - Per-label counts in test split: `news_industry`: ~7–8, `critique_opinion`: ~7–8, `community_inquiry`: ~7–8, `setup_nostalgia`: ~7–8. With 30 test items across 4 balanced labels, each class has approximately 7 to 8 examples in the test split.
 
 
