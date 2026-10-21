@@ -53,62 +53,46 @@ whether you hit them:
 
 ## 1.
 
-<!-- Your criterion. It must name a number. -->
-
-
+Overall Macro F1 is at least 0.60 on the held-out test split across each seed run.
 
 **Why this target:**
-
-
+With four balanced classes (`news_industry`, `critique_opinion`, `community_inquiry`, `setup_nostalgia`), a random guessing baseline yields 0.25 Macro F1. An F1 floor of 0.60 represents a reliable discriminative signal over informal Reddit discussions on a 200-sample fine-tuning set, while remaining achievable across all three evaluation seeds in Unit 6.
 
 ---
 
 ## 2.
 
-<!-- Your criterion. -->
-
-
+The `critique_opinion` label achieves a held-out F1 score of at least 0.50 across each seed.
 
 **Why this target:**
-
-
+With 50 examples in the dataset, approximately 7 to 8 land in the 15% test split. `critique_opinion` shares a subtle boundary with `community_inquiry` when users review a game before asking for recommendations, making it prone to high score variance across splits. A target of 0.50 ensures the model does not sacrifice this subtle category while tolerating small sample fluctuation.
 
 ---
 
 ## 3.
 
-<!-- Your criterion. -->
-
-
+The `news_industry` label achieves a held-out F1 score of at least 0.65 across each seed.
 
 **Why this target:**
-
-
+`news_industry` posts feature distinct syntactic patterns and vocabulary (e.g., corporate names, dollar amounts, executive quotes, studio announcements). Because its linguistic features are more explicit than player opinion or setup posts, it should reliably establish a higher discriminative floor.
 
 ---
 
 ## 4.
 
-<!-- Your criterion. -->
-
-
+No single label exceeds 35% or falls below 15% of the total rows in `labels.csv`.
 
 **Why this target:**
-
-
+The project ceiling requires that no class exceeds 70%. Capping each label between 30 and 70 examples in a 200-row file guarantees balanced priors during cross-entropy loss optimization, preventing the classifier from learning majority-class prediction shortcuts.
 
 ---
 
 ## 5.
 
-<!-- Your criterion. -->
-
-
+Agreement on the first 20 cold-labeled posts is at least 85% when checked against the written decision rule.
 
 **Why this target:**
-
-
-
+The first 20 rows are annotated by hand without tool assistance. An 85% agreement floor confirms that the interrogative-intent rule clearly separates borderline `critique_opinion` vs. `community_inquiry` cases before LLM batch pre-labeling is applied to the remaining 180 rows.
 ---
 
 <!-- ─────────────────────────────────────────────────────────────────────────
