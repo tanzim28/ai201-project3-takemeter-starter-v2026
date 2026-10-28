@@ -184,7 +184,15 @@ The first 20 rows were labeled cold by hand without tool assistance. The remaini
 
      Don't fill these in during unit 5.
      ═══════════════════════════════════════════════════════════════════ -->
+**Moment 3 (Unit 6 — Reference Set Adjudication & Sorting)**
+- *What I asked for:* Analyzing the 5 disagreements between my annotations on `staff_posts.csv` and `data/staff_labels.csv` against the definitions in `data/staff_taxonomy.md`, and evaluating arguments for each.
+- *What came back:* Detailed counter-arguments for each split, proposing that 3 fell under loose rule application (Pile a), 1 was an unaddressed taxonomy edge case (Pile b), and 1 was an ambiguous, defensible win (Pile c).
+- *What I changed:* Accepted the Pile (a) and (b) reasoning, but wrote my own explicit justification for the shoe session post in Pile (c), arguing that casual sarcasm about caffeine does not meet Rule 1's standard for load-bearing empirical evidence.
 
+**Moment 4 (Unit 6 — Matrix Directionality & Failure Diagnosis)**
+- *What I asked for:* Diagnosing why `critique_opinion` and `setup_nostalgia` collapsed to 0.000 F1 across all seeds and explaining the shift in the confusion matrix between 3 and 6 epochs.
+- *What came back:* An explanation pointing out that DistilBERT adopted a majority-class shortcut due to 65% class dominance (`news_industry` and `community_inquiry`), and that doubling epochs shifted misclassifications toward `news_industry` without separating true minority boundaries.
+- *What I changed:* Used this diagnosis to formulate the honest verdict for Milestone 5 and 6, concluding that hyperparameter tuning alone cannot overcome sparse minority support rows in a 200-sample dataset.
 ---
 
 ## Baseline vs. Trained
@@ -373,37 +381,36 @@ Three of my five disagreements (60%) landed in Pile (a), revealing a consistent 
 ## The Improvement
 
 **What I changed:**
+I increased training duration from `EPOCHS = 3` to `EPOCHS = 6` in `takemeter.ipynb` and re-evaluated across seeds 42, 7, and 2024 with `RUN_LABEL = "after"`, generating `results_three_seeds_after.json`.
 
 **Which diagnosis pointed at it:**
+The diagnosis for Criteria 1, 2, and 5 pointed directly at severe class imbalance combined with under-training: `news_industry` and `community_inquiry` account for 65% of the 200 posts, causing DistilBERT to collapse early onto majority shortcuts and score 0.000 F1 on `critique_opinion` and `setup_nostalgia`. Doubling epochs was selected to give gradient descent twice as many optimization steps to distinguish minority feature boundaries without modifying the committed dataset or taxonomy.
 
 ### Run Log — After
 
+Device: `mps` (Apple Silicon GPU)
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.65 | 0.633 | 0.600 | 0.667 | MISSED |
+| 2. Macro F1 | ≥ 0.50 | 0.387 | 0.366 | 0.466 | MISSED |
+| 3. Beats baseline on accuracy | yes | yes (0.633 vs 0.333) | yes (0.600 vs 0.333) | yes (0.667 vs 0.333) | MET |
+| 4. F1 on `news_industry` | ≥ 0.70 | 0.786 | 0.769 | 0.815 | MET |
+| 5. Every label F1 | ≥ 0.40 | 0.000 (critique/setup) | 0.000 (critique/setup) | 0.000 (critique) / 0.286 (setup) | MISSED |
 
 **Did it help, and how do I know:**
-
-<!-- If it didn't, say so. Relabelling that didn't help is a genuinely
-     interesting result and earns full credit. -->
-
-
+It helped partially, but failed to resolve the core minority collapse. On Seed 2024, extra training allowed `setup_nostalgia` to break out of zero for the first time, reaching an F1 of 0.286, which lifted overall accuracy to 0.667 and Macro F1 to 0.466. However, on Seeds 42 and 7, `setup_nostalgia` remained at 0.000, and `critique_opinion` remained completely unpredicted (0.000 F1) across all three seeds. Comparing the confusion matrices reveals that rather than learning true boundaries, the model merely shifted its majority shortcut: 4 true `setup_nostalgia` posts were absorbed into `news_industry` instead of `community_inquiry`.
 
 ---
 
 ## What's Still Broken
 
-<!-- For each criterion still missed: what you'd do, and why you stopped. -->
+* **Criterion 1 (Overall accuracy ≥ 0.65):** Missed on two of three seeds (0.633, 0.600, 0.667). To fix this, I would add 30–40 distinct examples to each minority class to balance the prior distribution; I stopped because modifying the training corpus in Unit 6 was out of scope.
+* **Criterion 2 (Macro F1 ≥ 0.50):** Missed across all three seeds (0.387, 0.366, 0.466) due to the persistent 0.000 score of `critique_opinion`. To fix this, I would implement class-weighted cross-entropy loss to penalize minority misclassifications; I stopped because the project constrained improvements to a single intervention.
+* **Criterion 5 (Every label F1 ≥ 0.40):** Missed across all three seeds because `critique_opinion` never produced a true positive, and `setup_nostalgia` peaked at 0.286 on only one split. To fix this, I would rewrite the decision rule separating subjective opinion from release news; I stopped because taxonomy definitions were locked.
 
-
-
-**The gap between what I meant my labels to capture and what the model
-learned:**
-<!-- Two sentences. Your confusion matrix is the evidence. -->
+**The gap between what I meant my labels to capture and what the model learned:**
+I intended `critique_opinion` to capture subjective player reviews and gameplay sentiment, while `setup_nostalgia` captured hardware, retro battlestations, and physical displays. In practice, the model ignored sentiment nuances and defaulted to surface-level lexical shortcuts, absorbing any critique that referenced an upcoming release into `news_industry` and classifying any retro post featuring setup inquiries as `community_inquiry`.
 
 
 

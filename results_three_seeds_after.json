@@ -1,0 +1,209 @@
+[
+  {
+    "seed": 42,
+    "n_test": 30,
+    "accuracy": 0.6333333333333333,
+    "f1_macro": 0.38690476190476186,
+    "per_label": {
+      "news_industry": {
+        "precision": 0.6470588235294118,
+        "recall": 1.0,
+        "f1": 0.7857142857142857,
+        "support": 11
+      },
+      "critique_opinion": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5
+      },
+      "community_inquiry": {
+        "precision": 0.6153846153846154,
+        "recall": 1.0,
+        "f1": 0.7619047619047619,
+        "support": 8
+      },
+      "setup_nostalgia": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 6
+      }
+    },
+    "confusion": {
+      "news_industry": {
+        "news_industry": 11,
+        "critique_opinion": 0,
+        "community_inquiry": 0,
+        "setup_nostalgia": 0
+      },
+      "critique_opinion": {
+        "news_industry": 2,
+        "critique_opinion": 0,
+        "community_inquiry": 3,
+        "setup_nostalgia": 0
+      },
+      "community_inquiry": {
+        "news_industry": 0,
+        "critique_opinion": 0,
+        "community_inquiry": 8,
+        "setup_nostalgia": 0
+      },
+      "setup_nostalgia": {
+        "news_industry": 4,
+        "critique_opinion": 0,
+        "community_inquiry": 2,
+        "setup_nostalgia": 0
+      }
+    },
+    "confidence": {
+      "mean_when_right": 0.5312560796737671,
+      "mean_when_wrong": 0.39108923077583313,
+      "accuracy_most_confident_third": 1.0,
+      "accuracy_least_confident_third": 0.2,
+      "n_per_third": 10
+    },
+    "device": "mps",
+    "device_name": "Apple Silicon GPU (MPS)",
+    "torch_version": "2.14.1",
+    "max_length": 128
+  },
+  {
+    "seed": 7,
+    "n_test": 30,
+    "accuracy": 0.6,
+    "f1_macro": 0.36622073578595316,
+    "per_label": {
+      "news_industry": {
+        "precision": 0.6666666666666666,
+        "recall": 0.9090909090909091,
+        "f1": 0.7692307692307693,
+        "support": 11
+      },
+      "critique_opinion": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5
+      },
+      "community_inquiry": {
+        "precision": 0.5333333333333333,
+        "recall": 1.0,
+        "f1": 0.6956521739130435,
+        "support": 8
+      },
+      "setup_nostalgia": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 6
+      }
+    },
+    "confusion": {
+      "news_industry": {
+        "news_industry": 10,
+        "critique_opinion": 0,
+        "community_inquiry": 1,
+        "setup_nostalgia": 0
+      },
+      "critique_opinion": {
+        "news_industry": 2,
+        "critique_opinion": 0,
+        "community_inquiry": 3,
+        "setup_nostalgia": 0
+      },
+      "community_inquiry": {
+        "news_industry": 0,
+        "critique_opinion": 0,
+        "community_inquiry": 8,
+        "setup_nostalgia": 0
+      },
+      "setup_nostalgia": {
+        "news_industry": 3,
+        "critique_opinion": 0,
+        "community_inquiry": 3,
+        "setup_nostalgia": 0
+      }
+    },
+    "confidence": {
+      "mean_when_right": 0.5113790035247803,
+      "mean_when_wrong": 0.380077987909317,
+      "accuracy_most_confident_third": 0.9,
+      "accuracy_least_confident_third": 0.2,
+      "n_per_third": 10
+    },
+    "device": "mps",
+    "device_name": "Apple Silicon GPU (MPS)",
+    "torch_version": "2.14.1",
+    "max_length": 128
+  },
+  {
+    "seed": 2024,
+    "n_test": 30,
+    "accuracy": 0.6666666666666666,
+    "f1_macro": 0.4656084656084656,
+    "per_label": {
+      "news_industry": {
+        "precision": 0.6875,
+        "recall": 1.0,
+        "f1": 0.8148148148148148,
+        "support": 11
+      },
+      "critique_opinion": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5
+      },
+      "community_inquiry": {
+        "precision": 0.6153846153846154,
+        "recall": 1.0,
+        "f1": 0.7619047619047619,
+        "support": 8
+      },
+      "setup_nostalgia": {
+        "precision": 1.0,
+        "recall": 0.16666666666666666,
+        "f1": 0.2857142857142857,
+        "support": 6
+      }
+    },
+    "confusion": {
+      "news_industry": {
+        "news_industry": 11,
+        "critique_opinion": 0,
+        "community_inquiry": 0,
+        "setup_nostalgia": 0
+      },
+      "critique_opinion": {
+        "news_industry": 2,
+        "critique_opinion": 0,
+        "community_inquiry": 3,
+        "setup_nostalgia": 0
+      },
+      "community_inquiry": {
+        "news_industry": 0,
+        "critique_opinion": 0,
+        "community_inquiry": 8,
+        "setup_nostalgia": 0
+      },
+      "setup_nostalgia": {
+        "news_industry": 3,
+        "critique_opinion": 0,
+        "community_inquiry": 2,
+        "setup_nostalgia": 1
+      }
+    },
+    "confidence": {
+      "mean_when_right": 0.49086523056030273,
+      "mean_when_wrong": 0.3844614028930664,
+      "accuracy_most_confident_third": 1.0,
+      "accuracy_least_confident_third": 0.3,
+      "n_per_third": 10
+    },
+    "device": "mps",
+    "device_name": "Apple Silicon GPU (MPS)",
+    "torch_version": "2.14.1",
+    "max_length": 128
+  }
+]
