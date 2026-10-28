@@ -5,6 +5,7 @@
 #
 # Delete the examples below and put yours in.
 
-analysis: makes an argument backed by a specific, checkable fact
-hot_take: a confident claim with no support offered
-reaction: an immediate response to something that just happened
+news_industry: Posts reporting factual studio announcements, release dates, executive remarks, acquisitions, trailer drops, or industry financial and legal news.
+critique_opinion: Posts offering subjective evaluations, reviews, design praise, or critiques of gameplay mechanics, pacing, or narrative choices.
+community_inquiry: Posts asking for game recommendations, technical identification, gameplay assistance, or solicitations of player experiences.
+setup_nostalgia: Posts showcasing physical hardware, retro collections, vintage media, battlestations, or reflective retrospectives on classic hardware.
